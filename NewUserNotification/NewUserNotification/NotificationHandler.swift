@@ -7,8 +7,8 @@
 //
 
 import UIKit
-import NewUserNotification
+import UserNotifications
 
-class NotificationHandler: NSObject, UNUser {
+class NotificationHandler: NSObject, UNUserNotificationCenterDelegate {
 
 }
