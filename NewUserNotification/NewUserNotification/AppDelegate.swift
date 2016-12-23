@@ -16,6 +16,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         
+        if #available(iOS 10.0, *) {
+            // Use UserNotification
+        }
+        
         UNUserNotificationCenter.current().delegate = self
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
             if granted {
@@ -23,8 +27,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
                 application.registerForRemoteNotifications()
             }
         }
+        registerNotificationCategory()
         
         return true
+    }
+    
+    private func registerNotificationCategory() {
+        let sayCategory: UNNotificationCategory = {
+            
+            let inputAction = UNTextInputNotificationAction(
+                identifier: "action.input",
+                title:"Input",
+                options: [.foreground],
+                textInputButtonTitle: "Send",
+                textInputPlaceholder: "what do you want to say")
+            
+            let goodbyeAction = UNNotificationAction(
+                identifier: "action.goodbye",
+                title:"Goodbye",
+                options: [.foreground])
+            
+            let cancelAction = UNNotificationAction(
+                identifier: "cancel",
+                title:"cancel",
+                options: [.foreground])
+            
+            return UNNotificationCategory(identifier: "sayCategory", actions: [inputAction, goodbyeAction, cancelAction], intentIdentifiers: [], options: [.customDismissAction])
+        }()
+        
+        UNUserNotificationCenter.current().setNotificationCategories([sayCategory])
     }
     
     func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
@@ -35,12 +66,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     // UNUserNotificationCenterDelegate
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        
+        completionHandler([.alert, .badge, .sound])
     }
     
     public func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        print("response is \(response)");
+//        completionHandler([.alert, .badge, .sound])
+        print(" ===   response is \(response)");
     }
 
 }

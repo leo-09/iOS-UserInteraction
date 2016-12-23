@@ -21,13 +21,14 @@ class ViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
 
-
     @IBAction func sendNotification(_ sender: UIButton) {
         
         // 1. 创建通知内容
         let content = UNMutableNotificationContent()
         content.title = "time interval Notification"
+        content.subtitle = "sub title"
         content.body = "my first notification"
+        content.categoryIdentifier = "sayCategory"
         
         // 2. 创建发送触发
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 5, repeats: false)
